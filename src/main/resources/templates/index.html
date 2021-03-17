@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Game Of Life</title>
+    <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+
+    <script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js}"></script>
+    <script th:inline="javascript">
+        delete Array.prototype.toJSON;
+        /*<![CDATA[*/
+        let rowsCount = /*[[${livingSpace.rows()}]]*/ null;
+        let colsCount = /*[[${livingSpace.cols()}]]*/ null;
+
+        function getCurrentLivingSpaceAsMatrix() {
+            let matrix = [];
+            for (let i = 0; i < rowsCount; i++) {
+                matrix.push([]);
+                for (let j = 0; j < colsCount; j++) {
+                    matrix[i].push(
+                        $('#living-space .living-space-row:nth-child(' + (i + 1) + ') .cell:nth-child(' + (j + 1) + ')').hasClass('cell-alive')
+                    );
+                }
+            }
+            return matrix;
+        }
+
+        function updateLivingSpace(livingSpaceMatrix) {
+            for (let i = 0; i < livingSpaceMatrix.length; i++) {
+                for (let j = 0; j < livingSpaceMatrix[i].length; j++) {
+                    let isAlive = livingSpaceMatrix[i][j];
+                    let cell = $('#living-space .living-space-row:nth-child(' + (i + 1) + ') .cell:nth-child(' + (j + 1) + ')');
+                    if (isAlive) {
+                        cell.addClass('cell-alive');
+                        cell.removeClass('cell-dead');
+                    } else {
+                        cell.addClass('cell-dead');
+                        cell.removeClass('cell-alive');
+                    }
+                }
+            }
+        }
+
+        function requestNextStep() {
+            let url = /*[[${nextStepUrl}]]*/ null;
+            let response = $.ajax(url, {
+                type: 'GET',
+                async: false,
+                contentType: "application/json",
+                dataType: "json",
+                processData: false,
+                success: (data, textStatus, jqXHR) => {
+                    console.log('In nextStep: status: ' + textStatus);
+                },
+                error: (jqXHR, textStatus, errorThrown) => {
+                    console.error('In nextStep: status: ' + textStatus + '; error: ' + errorThrown);
+                }
+            });
+            //console.log("nextStep response: " + response);
+            //console.log("nextStep responseText: " + response.responseText);
+            return $.parseJSON(
+                response.responseText
+            ).livingSpace;
+        }
+
+        function nextStep() {
+            let nextStepButton = $('#next-step-button');
+            let cancelRequestButton = $('#cancel-request-button');
+            nextStepButton.prop('disabled', true);
+            cancelRequestButton.prop('disabled', false);
+            let nextStepMatrix = requestNextStep();
+            cancelRequestButton.prop('disabled', true);
+            if (nextStepMatrix) {
+                updateLivingSpace(nextStepMatrix);
+            } else {
+                console.error('Failed to receive next step matrix of living space');
+            }
+            nextStepButton.prop('disabled', false);
+        }
+
+        function cancelNextStepRequest() {
+
+        }
+        /*]]>*/
+    </script>
+</head>
+    <body>
+        <!--/*@thymesVar id="livingSpace" type="birintsev.model.LivingSpace"*/-->
+        <div id="living-space" th:object="${livingSpace}">
+            <div
+                class="living-space-row"
+                th:each="i : *{#numbers.sequence(0, rows() - 1)}"
+                th:style="'height: ' + (100 / *{rows()} - 1) + '%;'"
+            >
+                <div
+                    th:each="j : *{#numbers.sequence(0, cols() - 1)}"
+                    th:classappend="${livingSpace.isAlive(i, j)} ? 'cell-alive' : 'cell-dead'"
+                    th:style="'width: ' + (100 / *{cols()}) + 'vmin;'"
+                    class="cell">
+                </div>
+            </div>
+        </div>
+        <input id="next-step-button" type="button" onclick="nextStep()" value="Next step">
+        <input id="cancel-request-button" type="button" onclick="cancelNextStepRequest()" value="Cancel request" disabled>
+    </body>
+</html>

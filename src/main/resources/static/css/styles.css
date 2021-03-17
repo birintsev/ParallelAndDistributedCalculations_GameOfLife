@@ -1,0 +1,45 @@
+html {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #595A4A;
+}
+
+#living-space {
+    background-color: #595A4A;
+    display: flex;
+    flex-flow: row wrap;
+    width: 50vmin;
+    height: 50vmin;
+    padding: 1px;
+    justify-content: space-around;
+}
+
+.living-space-row {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    alignment: center;
+    vertical-align: center;
+}
+
+.cell {
+    height: 100%;
+    display: inline-block;
+    margin: 1px;
+}
+
+.cell-alive {
+    background-color: #B0FE76;
+}
+
+.cell-dead {
+    background-color: #6290C3;
+}
