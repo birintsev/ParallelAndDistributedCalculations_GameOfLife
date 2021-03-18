@@ -46,7 +46,7 @@ public class LivingSpaceHistoryImpl implements LivingSpaceHistory {
     @Override
     public Future<LivingSpace> getCurrent() {
         Future<LivingSpace> current = null;
-        if (maxSize > 0) {
+        if (historyList.size() > 0) {
             current = historyList.get(historyList.size() - 1);
         }
         return current;
