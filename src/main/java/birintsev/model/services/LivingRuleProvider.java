@@ -1,4 +1,4 @@
-package birintsev.model.modelservices;
+package birintsev.model.services;
 
 import birintsev.model.LivingSpace;
 

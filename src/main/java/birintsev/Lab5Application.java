@@ -2,9 +2,9 @@ package birintsev;
 
 import birintsev.dto.LivingSpaceDTO;
 import birintsev.model.LivingSpace;
-import birintsev.model.modelservices.GameOfLiveService;
-import birintsev.userservices.DefaultUserService;
-import birintsev.userservices.UserService;
+import birintsev.model.services.GameOfLiveService;
+import birintsev.user.services.DefaultUserService;
+import birintsev.user.services.UserService;
 import birintsev.view.GameOfLiveApplication;
 import javafx.application.Application;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -73,11 +73,14 @@ public class Lab5Application implements ApplicationRunner, WebMvcConfigurer {
     UserService parallelUserService(
         @Qualifier(value = "ParallelRowsGameOfLifeService")
         GameOfLiveService parallelRowsGameOfLifeService,
-        LivingSpaceRandomizer livingSpaceRandomizer
+        LivingSpaceRandomizer livingSpaceRandomizer,
+        @Value("${gameoflife.defaults.livingSpaceHistoryMaxSize}")
+        int livingSpaceHistoryMaxSize
     ) {
         return new DefaultUserService(
             parallelRowsGameOfLifeService,
-            livingSpaceRandomizer
+            livingSpaceRandomizer,
+            livingSpaceHistoryMaxSize
         );
     }
 
@@ -85,11 +88,14 @@ public class Lab5Application implements ApplicationRunner, WebMvcConfigurer {
     UserService sequentialUserService(
         @Qualifier(value = "SequentialGameOfLiveService")
         GameOfLiveService sequentialGameOfLiveService,
-        LivingSpaceRandomizer livingSpaceRandomizer
+        LivingSpaceRandomizer livingSpaceRandomizer,
+        @Value("${gameoflife.defaults.livingSpaceHistoryMaxSize}")
+        int livingSpaceHistoryMaxSize
     ) {
         return new DefaultUserService(
             sequentialGameOfLiveService,
-            livingSpaceRandomizer
+            livingSpaceRandomizer,
+            livingSpaceHistoryMaxSize
         );
     }
 

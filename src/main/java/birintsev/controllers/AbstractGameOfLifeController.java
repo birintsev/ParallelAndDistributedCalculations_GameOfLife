@@ -3,7 +3,7 @@ package birintsev.controllers;
 import birintsev.LivingSpaceRandomizer;
 import birintsev.dto.LivingSpaceDTO;
 import birintsev.model.LivingSpace;
-import birintsev.userservices.UserService;
+import birintsev.user.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.ConversionService;
@@ -89,9 +89,9 @@ abstract class AbstractGameOfLifeController {
         HttpSession userSession,
         int cellsInRow
     ) {
-        userService.setCurrent(
+        userService.startNewGame(
             userSession,
-            livingSpaceRandomizer.mockRandomWrapped(cellsInRow)
+            () -> livingSpaceRandomizer.mockRandomWrapped(cellsInRow)
         );
     }
 

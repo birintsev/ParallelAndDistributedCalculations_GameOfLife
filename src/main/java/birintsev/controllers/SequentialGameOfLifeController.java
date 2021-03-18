@@ -2,7 +2,7 @@ package birintsev.controllers;
 
 import birintsev.LivingSpaceRandomizer;
 import birintsev.dto.LivingSpaceDTO;
-import birintsev.userservices.UserService;
+import birintsev.user.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
