@@ -90,12 +90,12 @@
             <div
                 class="living-space-row"
                 th:each="i : *{#numbers.sequence(0, rows() - 1)}"
-                th:style="'height: ' + (100 / *{rows()} - 1) + '%;'"
+                th:style="'height: ' + ${T(Math).max(1, (100 / livingSpace.rows() - 1))} + '%;'"
             >
                 <div
                     th:each="j : *{#numbers.sequence(0, cols() - 1)}"
                     th:classappend="${livingSpace.isAlive(i, j)} ? 'cell-alive' : 'cell-dead'"
-                    th:style="'width: ' + (100 / *{cols()}) + 'vmin;'"
+                    th:style="'width: ' + ${T(Math).max(1, (100 / livingSpace.cols()))} + 'vmin;'"
                     class="cell">
                 </div>
             </div>
